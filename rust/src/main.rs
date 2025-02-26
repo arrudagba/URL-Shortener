@@ -25,7 +25,8 @@ async fn shorten_url(info: web::Json<ShortenRequest>, pool: web::Data<PgPool>) -
 
     let short_id = generate_short_id();
     if insert_url(&pool, &short_id, &info.url).await {
-        HttpResponse::Ok().json(serde_json::json!({ "shortUrl": format!("http://127.0.0.1:8080/{}", short_id) }))
+        let base_url = env::var("BASE_URL").expect("BASE_URL not set");
+        HttpResponse::Ok().json(serde_json::json!({ "shortUrl": format!("{}/{}", base_url, short_id) }))
     } else {
         HttpResponse::InternalServerError().json(serde_json::json!({ "error": "Failed to shorten URL" }))
     }
@@ -75,7 +76,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         let cors = Cors::default()
-            .allowed_origin("http://localhost:3000")
+            .allowed_origin("https://url-shortener-steel-ten.vercel.app/")
             .allowed_methods(vec!["GET", "POST"])
             .allowed_headers(vec!["Content-Type"])
             .max_age(3600);
@@ -86,7 +87,7 @@ async fn main() -> std::io::Result<()> {
             .service(redirect)
             .service(shorten_url)
     })
-    .bind("127.0.0.1:8080")?
+    .bind("0.0.0.0:8080")?
     .run()
     .await
 }

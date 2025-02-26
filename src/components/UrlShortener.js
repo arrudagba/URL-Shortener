@@ -17,7 +17,8 @@ export default function UrlShortener() {
     }
   
     try {
-      const response = await fetch('http://127.0.0.1:8080/shorten', {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://url-shortener-9o7p.onrender.com";
+      const response = await fetch(`${API_URL}/shorten`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
