@@ -77,7 +77,7 @@ async fn main() -> std::io::Result<()> {
     let host = "0.0.0.0"; 
     HttpServer::new(move || {
         let cors = Cors::default()
-            .allowed_origin("https://url-shortener-steel-ten.vercel.app/")
+            .allowed_origin("https://url-shortener-steel-ten.vercel.app")
             .allowed_methods(vec!["GET", "POST"])
             .allowed_headers(vec!["Content-Type"])
             .max_age(3600);
