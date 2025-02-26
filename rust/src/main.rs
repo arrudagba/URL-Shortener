@@ -73,7 +73,8 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL not set");
     let pool = PgPool::connect(&database_url).await.expect("Failed to connect to database");
-
+    let port = env::var("PORT").unwrap_or_else(|_| "8080".to_string());
+    let host = "0.0.0.0"; 
     HttpServer::new(move || {
         let cors = Cors::default()
             .allowed_origin("https://url-shortener-steel-ten.vercel.app/")
@@ -87,7 +88,7 @@ async fn main() -> std::io::Result<()> {
             .service(redirect)
             .service(shorten_url)
     })
-    .bind("0.0.0.0:8080")?
+    .bind(format!("{}:{}", host, port))?
     .run()
     .await
 }
