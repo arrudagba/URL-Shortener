@@ -76,11 +76,7 @@ async fn main() -> std::io::Result<()> {
     let port = env::var("PORT").unwrap_or_else(|_| "8080".to_string());
     let host = "0.0.0.0"; 
     HttpServer::new(move || {
-        let cors = Cors::default()
-            .allowed_origin("https://url-shortener-steel-ten.vercel.app")
-            .allowed_methods(vec!["GET", "POST"])
-            .allowed_headers(vec!["Content-Type"])
-            .max_age(3600);
+        let cors = Cors::default().allow_any_origin().allow_any_method().allow_any_header();
 
         App::new()
             .wrap(cors)
